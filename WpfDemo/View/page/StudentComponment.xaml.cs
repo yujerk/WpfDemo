@@ -12,17 +12,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfDemo.ViewModel;
 
-namespace WpfDemo.View
+namespace WpfDemo.View.page
 {
     /// <summary>
-    /// StudentView.xaml 的交互逻辑
+    /// Componment.xaml 的交互逻辑
     /// </summary>
-    public partial class StudentView : Page
+    public partial class StudentComponment : Page
     {
-        public StudentView()
+        private readonly StudentViewModel _viewModel;
+        public StudentComponment()
         {
             InitializeComponent();
+            this.DataContext = _viewModel;
         }
     }
 }

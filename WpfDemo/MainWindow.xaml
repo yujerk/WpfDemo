@@ -5,11 +5,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:WpfDemo"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:WpfNavigationTutorial.Model"
     Title="学生信息管理"
     Width="800"
     Height="450"
     Background="#F7F7F7"
     mc:Ignorable="d">
+    <Window.DataContext>
+        <!--  直接在 XAML 中给 Window 的 DataContext 赋值  -->
+        <vm:MainWindowModel />
+    </Window.DataContext>
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="0,0,0,12" />
@@ -45,104 +50,35 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180" />
+            <ColumnDefinition Width="100" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <!--  导航栏  -->
-        <Border
-            Grid.RowSpan="2"
-            Grid.Column="0"
-            Padding="0,32,0,0"
-            Background="#263238">
-            <StackPanel>
-                <TextBlock
-                    Margin="16,0,0,24"
-                    FontSize="16"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    Text="导航" />
-                <Button
-                    Margin="16,0,16,12"
-                    Background="#263238"
-                    Content="学生信息" />
-                <Button
-                    Margin="16,0,16,12"
-                    Background="#263238"
-                    Content="教师信息" />
-                <Button
-                    Margin="16,0,16,12"
-                    Background="#263238"
-                    Content="课程信息" />
-            </StackPanel>
-        </Border>
-        <!--  标题  -->
-        <Border
-            Grid.Row="0"
+        
+        <ListBox
+            Name="navMenu"
+            BorderThickness="0,0,1,0"
+            ItemsSource="{Binding NavigationItems}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            SelectionChanged="navMenu_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="5">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Title}" />
+                            <!--  描述信息用灰色字体, 字号也小一点, 多余的部分剪切掉  -->
+                            <TextBlock
+                                FontSize="10"
+                                Foreground="Gray"
+                                Text="{Binding Description}"
+                                TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Frame
+            Name="appFrame"
             Grid.Column="1"
-            Margin="0,0,0,8"
-            Padding="24,16,0,16"
-            Background="White"
-            CornerRadius="0,0,8,8">
-            <TextBlock
-                FontSize="22"
-                FontWeight="Bold"
-                Foreground="#1976D2"
-                Text="学生信息管理" />
-        </Border>
-        <!--  内容区  -->
-        <Grid
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="0,0,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="160" />
-            </Grid.ColumnDefinitions>
-            <!--  学生信息表格  -->
-            <Border
-                Grid.Column="0"
-                Margin="0,0,16,0"
-                Padding="16"
-                Background="White"
-                BorderBrush="#E0E0E0"
-                BorderThickness="1"
-                CornerRadius="8">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <TextBlock
-                        Margin="0,0,0,12"
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Text="学生列表" />
-                    <!--  此处可放置DataGrid等控件  -->
-                    <ListView Grid.Row="1" Margin="0,0,0,0">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Width="80" Header="学号" />
-                                <GridViewColumn Width="120" Header="姓名" />
-                                <GridViewColumn Width="60" Header="性别" />
-                                <GridViewColumn Width="60" Header="年龄" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </Grid>
-            </Border>
-            <!--  操作按钮  -->
-            <StackPanel
-                Grid.Column="1"
-                Margin="0,0,0,0"
-                VerticalAlignment="Top">
-                <Button Content="添加" />
-                <Button Content="修改" />
-                <Button Content="删除" />
-            </StackPanel>
-        </Grid>
+            NavigationUIVisibility="Hidden" />
     </Grid>
 </Window>
