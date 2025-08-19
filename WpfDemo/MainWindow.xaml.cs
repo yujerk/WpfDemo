@@ -31,7 +31,7 @@ namespace WpfDemo
 
         }
         // 导航菜单项选择事件处理程序
-        private void navMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void NavMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // 如果选择项不是 FrameworkElement, 则返回
             if (navMenu.SelectedItem is not NavigationItem item)

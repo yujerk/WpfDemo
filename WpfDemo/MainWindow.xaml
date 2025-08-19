@@ -59,7 +59,7 @@
             BorderThickness="0,0,1,0"
             ItemsSource="{Binding NavigationItems}"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            SelectionChanged="navMenu_SelectionChanged">
+            SelectionChanged="NavMenu_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border Padding="5">

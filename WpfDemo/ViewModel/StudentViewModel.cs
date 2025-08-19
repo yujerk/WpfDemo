@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using demo.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using WpfDemo.Models.DTO;
+using WpfDemo.Models.Entity;
 using WpfDemo.Services;
 
 namespace WpfDemo.ViewModel
@@ -18,9 +18,12 @@ namespace WpfDemo.ViewModel
     {
         private readonly StudentService studentService;
 
-        public ObservableCollection<Student> Students { get; }
+        public ObservableCollection<Student> students { get; }
 
         private Student? _selectedStudent;
+
+        public Student student{ get; set; }
+        
 
 
         public ICommand LoadStudentsCommand { get; }
@@ -33,11 +36,12 @@ namespace WpfDemo.ViewModel
         public StudentViewModel()
         {
             studentService = new StudentService();
-            Students = new ObservableCollection<Student>();
+            students = new ObservableCollection<Student>();
+            student=new Student();
 
             LoadStudentsCommand = new RelayCommand(async () => await LoadStudents());
             SearchCommand = new RelayCommand<string>(FilterStudents);
-            //AddStudentCommand = new RelayCommand(AddStudent);
+            AddStudentCommand = new RelayCommand<Student>(AddStudent);
             EditStudentCommand = new RelayCommand<Student>(EditStudent);
             DeleteStudentCommand = new RelayCommand<int>(DeleteStudent);
             //ViewDetailsCommand = new RelayCommand(() => ViewDetails(), () => CanViewDetails);
@@ -50,14 +54,19 @@ namespace WpfDemo.ViewModel
 
         private async Task LoadStudents()
         {
+            MessageBox.Show("加载学生数据");
+
+           
             try
             {
-                var students = await studentService.GetStudentsAsync();
-                Students.Clear();
-                foreach (var student in students)
+                var _students = await studentService.GetStudentsAsync();
+                students.Clear();
+                foreach (var student in _students)
                 {
-                    Students.Add(student);
+                    students.Add(student);
                 }
+
+
             }
             catch (Exception ex)
             {
@@ -88,8 +97,8 @@ namespace WpfDemo.ViewModel
                 {
                     return;
                 }
-                Students.Clear();
-                Students.Add(filteredStudents);
+                students.Clear();
+                students.Add(filteredStudents);
                 MessageBox.Show($"筛选学生数据: {filteredStudents.LastName}");
             }
             catch (Exception ex)
@@ -105,7 +114,7 @@ namespace WpfDemo.ViewModel
                 var result = await studentService.DeleteStudentAsync(id);
                 if (result)
                 {
-                    Students.Clear();
+                    students.Clear();
                     await LoadStudents();
                     MessageBox.Show("删除学生成功");
                 }
@@ -128,23 +137,48 @@ namespace WpfDemo.ViewModel
                 return;
             }
             MessageBox.Show($"编辑学生信息: {student.LastName}");
-            //try
-            //{
-            //    var result = await studentService.UpdateStudentAsync(student);
-            //    if (result)
-            //    {
-            //        MessageBox.Show("学生信息更新成功");
-            //        await LoadStudents();
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show("学生信息更新失败");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"更新学生信息失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-            //}
+            try
+            {
+                var result = await studentService.UpdateStudentAsync(student);
+                if (result)
+                {
+                    MessageBox.Show("学生信息更新成功");
+                    await LoadStudents();
+                }
+                else
+                {
+                    MessageBox.Show("学生信息更新失败");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"更新学生信息失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+        private async void AddStudent(Student student)
+        {
+            if (student.FirstMidName == null || student.LastName == null)
+            {
+                MessageBox.Show("请填写完整的学生信息。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            try 
+            {
+                var result = await studentService.AddStudentAsync(student);
+                if (result)
+                {
+                    MessageBox.Show("学生添加成功");
+                    await LoadStudents();
+                }
+                else
+                {
+                    MessageBox.Show("学生添加失败");
+                }
+            }catch(Exception ex)
+            {
+                MessageBox.Show($"添加学生失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        
     }
 }

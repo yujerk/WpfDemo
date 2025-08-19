@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace WpfDemo.utils
+namespace WpfDemo.Utils
 {
     public class CustomDateTimeConverter : JsonConverter<DateTime?>
     {

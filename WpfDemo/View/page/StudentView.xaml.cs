@@ -1,5 +1,4 @@
-﻿using demo.Models.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +12,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfDemo.Models.Entity;
+using WpfDemo.View.window;
+using WpfDemo.ViewModel;
 
-namespace WpfDemo.View
+namespace WpfDemo.View.page
 {
     /// <summary>
     /// StudentView.xaml 的交互逻辑
@@ -47,6 +49,27 @@ namespace WpfDemo.View
             else
             {
                 MessageBox.Show("未选择任何项");
+            }
+        }
+        private void AddStudentButton_Click(object sender, RoutedEventArgs e)
+        {
+            var editWindow = new StudentEditWindow(null);
+            var result = editWindow.ShowDialog();
+            // 可以根据需要处理返回结果
+        }
+
+        private void EditStudentButton_Click(object sender, RoutedEventArgs e)
+        {
+            var studentViewModel = DataContext as StudentViewModel;
+            if (studentViewModel.SelectedStudent != null)
+            {
+                var editWindow = new StudentEditWindow(studentViewModel.SelectedStudent);
+                var result = editWindow.ShowDialog();
+                // 可以根据需要处理返回结果
+            }
+            else
+            {
+                MessageBox.Show("请先选择一个学生进行编辑", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }

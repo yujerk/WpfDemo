@@ -1,5 +1,4 @@
-﻿using demo.Models.Entity;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WpfDemo.Models.Entity
 {

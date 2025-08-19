@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using WpfDemo.Models.Entity;
 
-namespace demo.Models.Entity
+namespace WpfDemo.Models.Entity
 {
     public class Student
     {

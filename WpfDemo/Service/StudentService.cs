@@ -1,12 +1,12 @@
-﻿using demo.Models.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using WpfDemo.utils;
+using WpfDemo.Models.Entity;
+using WpfDemo.Utils;
 
 namespace WpfDemo.Services
 {
@@ -47,7 +47,6 @@ namespace WpfDemo.Services
             {
                 var response = await _httpClient.GetFromJsonAsync<ApiResponse<Student>>($"{BaseUrl}/Students/GetStudent/{id}");
                 return response?.Data ?? new Student();
-                return null;
             }
             catch (Exception ex)
             {
@@ -61,7 +60,7 @@ namespace WpfDemo.Services
             {
                 var json = JsonSerializer.Serialize(student);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PostAsync($"{BaseUrl}/students", content);
+                var response = await _httpClient.PostAsync($"{BaseUrl}/Students/Create", content);
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
