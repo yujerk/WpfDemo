@@ -5,11 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:WpfDemo.View.window"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewmodel="clr-namespace:WpfDemo.ViewModel"
-    Title="学生信息编辑"
     Width="400"
     Height="400"
-    d:DataContext="{d:DesignInstance Type=viewmodel:StudentViewModel}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid Margin="20">
@@ -24,6 +21,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock
+            x:Name="text"
             Grid.Row="0"
             Margin="0,0,0,20"
             HorizontalAlignment="Center"
@@ -44,7 +42,7 @@
                 Grid.Column="1"
                 Height="25"
                 VerticalContentAlignment="Center"
-                Text="{Binding student.FirstMidName}" />
+                Text="{Binding Student.FirstMidName}" />
         </Grid>
 
         <Grid Grid.Row="2" Margin="0,0,0,10">
@@ -61,11 +59,8 @@
                 Grid.Column="1"
                 Height="25"
                 VerticalContentAlignment="Center"
-                Text="{Binding student.LastName}" />
+                Text="{Binding Student.LastName}" />
         </Grid>
-
-
-
         <StackPanel
             Grid.Row="5"
             Margin="0,20,0,0"
@@ -77,21 +72,23 @@
                 Height="30"
                 Margin="10,0"
                 Command="{Binding DataContext.AddStudentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                CommandParameter="{Binding student}"
-                Content="保存" />
+                CommandParameter="{Binding Student}"
+                Content="新增"
+                Visibility="Hidden" />
             <Button
-                x:Name="CancelButton"
+                x:Name="EditButton"
                 Width="80"
                 Height="30"
                 Margin="10,0"
-                Command="{Binding DataContext.CancelStudentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                Content="取消" />
+                Command="{Binding DataContext.EditStudentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                CommandParameter="{Binding Student}"
+                Content="保存"
+                Visibility="Hidden" />
             <Button
                 x:Name="DeleteButton"
                 Width="80"
                 Height="30"
                 Margin="10,0"
-                Click="Button_Click"
                 Content="删除" />
         </StackPanel>
     </Grid>

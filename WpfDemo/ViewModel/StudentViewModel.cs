@@ -18,13 +18,14 @@ namespace WpfDemo.ViewModel
     {
         private readonly StudentService studentService;
 
-        public ObservableCollection<Student> students { get; }
+        public ObservableCollection<Student> Students { get; }
 
         private Student? _selectedStudent;
 
-        public Student student{ get; set; }
-        
+        public Student Student { get; set; }
 
+        // 添加关闭窗口的事件通知
+        public Action<bool> OnRequestClose { get; set; }
 
         public ICommand LoadStudentsCommand { get; }
         public ICommand SearchCommand { get; }
@@ -32,20 +33,20 @@ namespace WpfDemo.ViewModel
         public ICommand EditStudentCommand { get; }
         public ICommand DeleteStudentCommand { get; }
         public ICommand ViewDetailsCommand { get; }
-        // 更新构造函数中的命令初始化
+
         public StudentViewModel()
         {
             studentService = new StudentService();
-            students = new ObservableCollection<Student>();
-            student=new Student();
+            Students = new ObservableCollection<Student>();
+            Student = new Student();
 
             LoadStudentsCommand = new RelayCommand(async () => await LoadStudents());
             SearchCommand = new RelayCommand<string>(FilterStudents);
             AddStudentCommand = new RelayCommand<Student>(AddStudent);
             EditStudentCommand = new RelayCommand<Student>(EditStudent);
             DeleteStudentCommand = new RelayCommand<int>(DeleteStudent);
-            //ViewDetailsCommand = new RelayCommand(() => ViewDetails(), () => CanViewDetails);
         }
+
         public Student? SelectedStudent
         {
             get => _selectedStudent;
@@ -56,27 +57,28 @@ namespace WpfDemo.ViewModel
         {
             MessageBox.Show("加载学生数据");
 
-           
             try
             {
                 var _students = await studentService.GetStudentsAsync();
-                students.Clear();
+                Students.Clear();
                 foreach (var student in _students)
                 {
-                    students.Add(student);
+                    Students.Add(student);
                 }
-
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"加载学生数据失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private string filterText = string.Empty;
 
-        public string FilterText { get => filterText; set => SetProperty(ref filterText, value); }
-        // 修改 FilterStudents 方法以接受 string? 类型参数，确保与 RelayCommand<string> 的委托类型匹配
+        private string filterText = string.Empty;
+        public string FilterText
+        {
+            get => filterText;
+            set => SetProperty(ref filterText, value);
+        }
+
         private async void FilterStudents(string? id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -97,8 +99,8 @@ namespace WpfDemo.ViewModel
                 {
                     return;
                 }
-                students.Clear();
-                students.Add(filteredStudents);
+                Students.Clear();
+                Students.Add(filteredStudents);
                 MessageBox.Show($"筛选学生数据: {filteredStudents.LastName}");
             }
             catch (Exception ex)
@@ -114,9 +116,10 @@ namespace WpfDemo.ViewModel
                 var result = await studentService.DeleteStudentAsync(id);
                 if (result)
                 {
-                    students.Clear();
-                    await LoadStudents();
+                    Students.Clear();
+                    
                     MessageBox.Show("删除学生成功");
+                    await LoadStudents();
                 }
                 else
                 {
@@ -143,7 +146,7 @@ namespace WpfDemo.ViewModel
                 if (result)
                 {
                     MessageBox.Show("学生信息更新成功");
-                    await LoadStudents();
+                    OnRequestClose?.Invoke(true);
                 }
                 else
                 {
@@ -155,30 +158,35 @@ namespace WpfDemo.ViewModel
                 MessageBox.Show($"更新学生信息失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        // 修复后的方法
         private async void AddStudent(Student student)
         {
-            if (student.FirstMidName == null || student.LastName == null)
+            if (student == null || string.IsNullOrWhiteSpace(student.FirstMidName) || string.IsNullOrWhiteSpace(student.LastName))
             {
                 MessageBox.Show("请填写完整的学生信息。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            try 
+
+            try
             {
                 var result = await studentService.AddStudentAsync(student);
                 if (result)
                 {
                     MessageBox.Show("学生添加成功");
-                    await LoadStudents();
+                    // 通过事件通知View关闭窗口
+                    OnRequestClose?.Invoke(true);
+                    
                 }
                 else
                 {
                     MessageBox.Show("学生添加失败");
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show($"添加学生失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
     }
 }

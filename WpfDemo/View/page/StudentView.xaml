@@ -10,9 +10,6 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Page.DataContext>
-        <vm:StudentViewModel />
-    </Page.DataContext>
     <Grid>
         <!--  标题  -->
         <Border
@@ -79,7 +76,7 @@
                         Name="list"
                         Grid.Row="1"
                         Margin="0,0,0,0"
-                        ItemsSource="{Binding students}"
+                        ItemsSource="{Binding Students}"
                         SelectedItem="{Binding SelectedStudent}"
                         SelectionChanged="ListView_SelectionChanged">
                         <ListView.View>

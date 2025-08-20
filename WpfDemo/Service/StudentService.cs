@@ -75,7 +75,7 @@ namespace WpfDemo.Services
             {
                 var json = JsonSerializer.Serialize(student);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await _httpClient.PutAsync($"{BaseUrl}/students/{student.Id}", content);
+                var response = await _httpClient.PutAsync($"{BaseUrl}/Students/UpdateUser/{student.Id}", content);
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)

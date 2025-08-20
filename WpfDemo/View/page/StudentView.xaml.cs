@@ -23,10 +23,19 @@ namespace WpfDemo.View.page
     /// </summary>
     public partial class StudentView : Page
     {
+        private StudentViewModel _viewModel;
         public StudentView()
         {
             InitializeComponent();
+            _viewModel = new StudentViewModel();
+            DataContext = _viewModel;
+            this.Loaded += StudentView_Loaded;
         }
+    
+    private void StudentView_Loaded(object sender, RoutedEventArgs e)
+    {
+            _viewModel.LoadStudentsCommand.Execute(null);
+    }
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (list.SelectedItem != null)
@@ -54,16 +63,24 @@ namespace WpfDemo.View.page
         private void AddStudentButton_Click(object sender, RoutedEventArgs e)
         {
             var editWindow = new StudentEditWindow(null);
+            editWindow.Closed += (s, e) =>
+            {
+                _viewModel.LoadStudentsCommand.Execute(null);
+            };
             var result = editWindow.ShowDialog();
+            
             // 可以根据需要处理返回结果
         }
 
         private void EditStudentButton_Click(object sender, RoutedEventArgs e)
         {
-            var studentViewModel = DataContext as StudentViewModel;
-            if (studentViewModel.SelectedStudent != null)
-            {
-                var editWindow = new StudentEditWindow(studentViewModel.SelectedStudent);
+            if (_viewModel.SelectedStudent != null)
+            { 
+                var editWindow = new StudentEditWindow(_viewModel.SelectedStudent);
+                editWindow.Closed+= (s, e) =>
+                {
+                    _viewModel.LoadStudentsCommand.Execute(null);
+                };
                 var result = editWindow.ShowDialog();
                 // 可以根据需要处理返回结果
             }
@@ -72,5 +89,6 @@ namespace WpfDemo.View.page
                 MessageBox.Show("请先选择一个学生进行编辑", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+        
     }
 }
