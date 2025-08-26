@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using WpfDemo.View;
 using WpfDemo.View.page;
-namespace WpfNavigationTutorial.Model
+namespace WpfDemo.Models
 {
     public class MainWindowModel
     {

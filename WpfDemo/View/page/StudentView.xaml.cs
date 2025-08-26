@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WpfDemo.Models.Entity;
 using WpfDemo.View.window;
 using WpfDemo.ViewModel;
@@ -31,11 +19,11 @@ namespace WpfDemo.View.page
             DataContext = _viewModel;
             this.Loaded += StudentView_Loaded;
         }
-    
-    private void StudentView_Loaded(object sender, RoutedEventArgs e)
-    {
+
+        private void StudentView_Loaded(object sender, RoutedEventArgs e)
+        {
             _viewModel.LoadStudentsCommand.Execute(null);
-    }
+        }
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (list.SelectedItem != null)
@@ -68,16 +56,16 @@ namespace WpfDemo.View.page
                 _viewModel.LoadStudentsCommand.Execute(null);
             };
             var result = editWindow.ShowDialog();
-            
+
             // 可以根据需要处理返回结果
         }
 
         private void EditStudentButton_Click(object sender, RoutedEventArgs e)
         {
             if (_viewModel.SelectedStudent != null)
-            { 
+            {
                 var editWindow = new StudentEditWindow(_viewModel.SelectedStudent);
-                editWindow.Closed+= (s, e) =>
+                editWindow.Closed += (s, e) =>
                 {
                     _viewModel.LoadStudentsCommand.Execute(null);
                 };

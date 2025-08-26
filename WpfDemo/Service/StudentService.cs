@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -12,11 +13,12 @@ namespace WpfDemo.Services
 {
     public class StudentService
     {
+        private readonly ILogger<StudentService> _logger;
         private readonly HttpClient _httpClient;
         private const string BaseUrl = "http://localhost:5189/api";
-
-        public StudentService()
+        public StudentService(ILogger<StudentService> logger)
         {
+            _logger = logger;
             _httpClient = new HttpClient();
         }
 
@@ -37,6 +39,7 @@ namespace WpfDemo.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "获取学生数据失败");
                 throw new Exception($"获取学生数据失败: {ex.Message}", ex);
             }
         }
@@ -55,6 +58,7 @@ namespace WpfDemo.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "获取学生数据失败");
                 throw new Exception($"获取学生信息失败: {ex.Message}", ex);
             }
         }
@@ -70,6 +74,7 @@ namespace WpfDemo.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "添加学生数据失败");
                 throw new Exception($"添加学生失败: {ex.Message}", ex);
             }
         }
@@ -85,6 +90,7 @@ namespace WpfDemo.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "更新学生数据失败");
                 throw new Exception($"更新学生信息失败: {ex.Message}", ex);
             }
         }
@@ -98,6 +104,7 @@ namespace WpfDemo.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "删除学生数据失败");
                 throw new Exception($"删除学生失败: {ex.Message}", ex);
             }
         }

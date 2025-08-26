@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace WpfNavigationTutorial.Model
+namespace WpfDemo.Models
 {
     public class NavigationItem
     {

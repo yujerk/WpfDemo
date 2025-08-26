@@ -33,17 +33,9 @@ namespace WpfDemo.View.window
                 text.Text = "编辑学生信息";
                 
             }
-
-           
         }
-        //public void Button_Click(object sender, RoutedEventArgs e)
-        //{ 
-        //    var student = DataContext as StudentViewModel;
-        //    MessageBox.Show($"保存成功{student.student.FirstMidName}");
-        //}
         private void OnViewModelRequestClose(bool success)
         {
-            //this.DialogResult = success;
             this.Close();
         }
     }

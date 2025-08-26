@@ -1,12 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using WpfDemo.Models.DTO;
 using WpfDemo.Models.Entity;
@@ -16,6 +19,7 @@ namespace WpfDemo.ViewModel
 {
     public partial class StudentViewModel : ObservableObject
     {
+        private readonly ILogger<StudentService> logger;
         private readonly StudentService studentService;
 
         public ObservableCollection<Student> Students { get; }
@@ -24,14 +28,18 @@ namespace WpfDemo.ViewModel
         public Student Student { get; set; }
 
         public int pageSize=15;
-        private string page;
-        public string Page 
+        private int page;
+        public int Page 
         {
             get => page;
             set
             {
+                if (value <= 0 || value>=10)
+                {
+                    throw new ArgumentNullException("输入有误");
+                }
                 SetProperty(ref page, value);
-                PageStudent();
+                
             }
 
         }
@@ -57,7 +65,7 @@ namespace WpfDemo.ViewModel
 
         public StudentViewModel()
         {
-            studentService = new StudentService();
+            studentService = new StudentService(logger);
             Students = new ObservableCollection<Student>();
             Student = new Student();
 
@@ -67,17 +75,15 @@ namespace WpfDemo.ViewModel
         [RelayCommand]
         private void PageStudent()
         {
-            if (page != null)
+           
+            var pageNum = page;
+            if(pageNum>0 && pageNum <= (student1.Count / pageSize + 1))
             {
-                var pageNum = int.Parse(page);
-                if(pageNum>0 && pageNum <= (student1.Count / pageSize + 1))
+                var _students = student1.Skip(pageSize * (pageNum - 1)).Take(pageSize).ToList();
+                Students.Clear();
+                foreach (var student in _students)
                 {
-                    var _students = student1.Skip(pageSize * (pageNum - 1)).Take(pageSize).ToList();
-                    Students.Clear();
-                    foreach (var student in _students)
-                    {
-                        Students.Add(student);
-                    }
+                    Students.Add(student);
                 }
             }
             
@@ -159,7 +165,7 @@ namespace WpfDemo.ViewModel
             }
         }
         [RelayCommand]
-        private async void EditStudent(Student student)
+        private async Task EditStudent(Student student)
         {
             if (student == null)
             {
@@ -215,5 +221,23 @@ namespace WpfDemo.ViewModel
                 MessageBox.Show($"添加学生失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+       
     }
+    class StringValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            if (value is string str && !string.IsNullOrWhiteSpace(str))
+            {
+                return new ValidationResult(true, null);
+            }
+            else
+            {
+                return new ValidationResult(false, "请填写完整");
+            }
+        }
+
+    }
+
 }
+ 

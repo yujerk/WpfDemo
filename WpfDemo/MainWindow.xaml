@@ -5,55 +5,24 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:WpfDemo"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:WpfNavigationTutorial.Model"
+    xmlns:vm="clr-namespace:WpfDemo.Models"
     Title="学生信息管理"
     Width="800"
     Height="450"
     Background="#F7F7F7"
     mc:Ignorable="d">
     <Window.DataContext>
-        <!--  直接在 XAML 中给 Window 的 DataContext 赋值  -->
         <vm:MainWindowModel />
     </Window.DataContext>
     <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Margin" Value="0,0,0,12" />
-            <Setter Property="Padding" Value="16,6" />
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="Background" Value="#2196F3" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="BorderBrush" Value="#1976D2" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            x:Name="border"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="4">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#1565C0" />
-                                <Setter TargetName="border" Property="BorderBrush" Value="#0D47A1" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+       
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
+
         <ListBox
             Name="navMenu"
             BorderThickness="0,0,1,0"

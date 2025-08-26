@@ -10,6 +10,15 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Style TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
     <Grid>
         <!--  标题  -->
         <Border
@@ -103,8 +112,7 @@
                                             <Button
                                                 Margin="0,0,4,0"
                                                 Padding="4,2"
-                                                Command="{Binding DataContext.EditStudentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                CommandParameter="{Binding}"
+                                                Click="EditStudentButton_Click"
                                                 Content="编辑" />
                                             <Button
                                                 Margin="0,0,4,0"
@@ -124,7 +132,7 @@
                             x:Name="page"
                             Width="85"
                             Margin="180,0,10,0"
-                            Text="{Binding Page}" />
+                            Text="{Binding Page, ValidatesOnExceptions=True}" />
                         <Button
                             x:Name="pageButton"
                             Width="100"
