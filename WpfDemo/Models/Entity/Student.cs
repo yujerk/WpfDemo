@@ -16,7 +16,10 @@ namespace WpfDemo.Models.Entity
         /// </summary>
         [Required]
         [StringLength(50)]
-        public string LastName { get; set; }
+        public string LastName {
+            get;
+            set;
+        }
         /// <summary>
         /// 名
         /// </summary>

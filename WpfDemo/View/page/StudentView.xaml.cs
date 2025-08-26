@@ -89,6 +89,10 @@ namespace WpfDemo.View.page
                 MessageBox.Show("请先选择一个学生进行编辑", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-        
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

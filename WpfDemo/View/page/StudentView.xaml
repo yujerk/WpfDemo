@@ -48,6 +48,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <StackPanel>
                         <TextBlock
@@ -64,60 +65,73 @@
                                 Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" />
                             <Button
                                 Width="60"
-                                Command="{Binding SearchCommand}"
+                                Command="{Binding FilterStudentsCommand}"
                                 CommandParameter="{Binding FilterText}"
                                 Content="筛选" />
                         </StackPanel>
                     </StackPanel>
-
-                    <!--  此处可放置DataGrid等控件  -->
-
-                    <ListView
+                    <DataGrid
                         Name="list"
                         Grid.Row="1"
                         Margin="0,0,0,0"
+                        AutoGenerateColumns="False"
+                        GridLinesVisibility="Horizontal"
+                        HeadersVisibility="Column"
+                        HorizontalGridLinesBrush="#E0E0E0"
+                        IsReadOnly="True"
                         ItemsSource="{Binding Students}"
                         SelectedItem="{Binding SelectedStudent}"
-                        SelectionChanged="ListView_SelectionChanged">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn
-                                    Width="80"
-                                    DisplayMemberBinding="{Binding Id}"
-                                    Header="学号" />
-                                <GridViewColumn
-                                    Width="120"
-                                    DisplayMemberBinding="{Binding FullName}"
-                                    Header="姓名" />
-                                <GridViewColumn
-                                    Width="60"
-                                    DisplayMemberBinding="{Binding EnrollmentDate, StringFormat='yyyy-MM-dd'}"
-                                    Header="选课日期" />
-                                <GridViewColumn Width="80" Header="操作">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                                <Button
-                                                    Margin="0,0,4,0"
-                                                    Command="{Binding DataContext.EditStudentCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                    CommandParameter="{Binding}"
-                                                    Content="编辑" />
-                                                <Button
-                                                    Margin="0,0,4,0"
-                                                    Command="{Binding DataContext.DeleteStudentCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                    CommandParameter="{Binding Id}"
-                                                    Content="删除" />
-                                                <!--<Button
-                                                    Command="{Binding DataContext.UpdateStudentCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                    CommandParameter="{Binding}"
-                                                    Content="修改" />-->
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                        SelectionMode="Single"
+                        SelectionUnit="FullRow">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Width="80"
+                                Binding="{Binding Id}"
+                                Header="学号" />
+                            <DataGridTextColumn
+                                Width="120"
+                                Binding="{Binding FullName}"
+                                Header="姓名" />
+                            <DataGridTextColumn
+                                Width="100"
+                                Binding="{Binding EnrollmentDate, StringFormat='yyyy-MM-dd'}"
+                                Header="选课日期" />
+                            <DataGridTemplateColumn Width="120" Header="操作">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button
+                                                Margin="0,0,4,0"
+                                                Padding="4,2"
+                                                Command="{Binding DataContext.EditStudentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Content="编辑" />
+                                            <Button
+                                                Margin="0,0,4,0"
+                                                Padding="4,2"
+                                                Command="{Binding DataContext.DeleteStudentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding Id}"
+                                                Content="删除" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <TextBox
+                            x:Name="page"
+                            Width="85"
+                            Margin="180,0,10,0"
+                            Text="{Binding Page}" />
+                        <Button
+                            x:Name="pageButton"
+                            Width="100"
+                            Command="{Binding PageStudentCommand}"
+                            CommandParameter="{Binding Text, ElementName=page}"
+                            Content="跳转" />
+                    </StackPanel>
                 </Grid>
             </Border>
             <!--  操作按钮  -->

@@ -45,7 +45,12 @@ namespace WpfDemo.Services
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<ApiResponse<Student>>($"{BaseUrl}/Students/GetStudent/{id}");
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    Converters = { new CustomDateTimeConverter() }
+                };
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<Student>>($"{BaseUrl}/Students/GetStudent/{id}",options);
                 return response?.Data ?? new Student();
             }
             catch (Exception ex)

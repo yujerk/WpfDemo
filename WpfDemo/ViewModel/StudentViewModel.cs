@@ -14,25 +14,46 @@ using WpfDemo.Services;
 
 namespace WpfDemo.ViewModel
 {
-    public class StudentViewModel : ObservableObject
+    public partial class StudentViewModel : ObservableObject
     {
         private readonly StudentService studentService;
 
         public ObservableCollection<Student> Students { get; }
-
+        public List<Student> student1;
         private Student? _selectedStudent;
-
         public Student Student { get; set; }
 
+        public int pageSize=15;
+        private string page;
+        public string Page 
+        {
+            get => page;
+            set
+            {
+                SetProperty(ref page, value);
+                PageStudent();
+            }
+
+        }
+
+        private string _filterText;
+
+        public string FilterText
+        {
+            get => _filterText;
+            set
+            {
+                SetProperty(ref _filterText, value);
+            }
+        }
+        
+        public Student? SelectedStudent
+        {
+            get => _selectedStudent;
+            set => SetProperty(ref _selectedStudent, value);
+        }
         // 添加关闭窗口的事件通知
         public Action<bool> OnRequestClose { get; set; }
-
-        public ICommand LoadStudentsCommand { get; }
-        public ICommand SearchCommand { get; }
-        public ICommand AddStudentCommand { get; }
-        public ICommand EditStudentCommand { get; }
-        public ICommand DeleteStudentCommand { get; }
-        public ICommand ViewDetailsCommand { get; }
 
         public StudentViewModel()
         {
@@ -40,19 +61,29 @@ namespace WpfDemo.ViewModel
             Students = new ObservableCollection<Student>();
             Student = new Student();
 
-            LoadStudentsCommand = new RelayCommand(async () => await LoadStudents());
-            SearchCommand = new RelayCommand<string>(FilterStudents);
-            AddStudentCommand = new RelayCommand<Student>(AddStudent);
-            EditStudentCommand = new RelayCommand<Student>(EditStudent);
-            DeleteStudentCommand = new RelayCommand<int>(DeleteStudent);
         }
 
-        public Student? SelectedStudent
+        
+        [RelayCommand]
+        private void PageStudent()
         {
-            get => _selectedStudent;
-            set => SetProperty(ref _selectedStudent, value);
+            if (page != null)
+            {
+                var pageNum = int.Parse(page);
+                if(pageNum>0 && pageNum <= (student1.Count / pageSize + 1))
+                {
+                    var _students = student1.Skip(pageSize * (pageNum - 1)).Take(pageSize).ToList();
+                    Students.Clear();
+                    foreach (var student in _students)
+                    {
+                        Students.Add(student);
+                    }
+                }
+            }
+            
+            
         }
-
+        [RelayCommand]
         private async Task LoadStudents()
         {
             MessageBox.Show("加载学生数据");
@@ -65,6 +96,7 @@ namespace WpfDemo.ViewModel
                 {
                     Students.Add(student);
                 }
+                student1 = Students.ToList();
             }
             catch (Exception ex)
             {
@@ -72,14 +104,9 @@ namespace WpfDemo.ViewModel
             }
         }
 
-        private string filterText = string.Empty;
-        public string FilterText
-        {
-            get => filterText;
-            set => SetProperty(ref filterText, value);
-        }
-
-        private async void FilterStudents(string? id)
+        
+        [RelayCommand]
+        private async Task FilterStudents(string? id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -108,8 +135,8 @@ namespace WpfDemo.ViewModel
                 MessageBox.Show($"筛选学生数据失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private async void DeleteStudent(int id)
+        [RelayCommand]
+        private async Task DeleteStudent(int id)
         {
             try
             {
@@ -131,7 +158,7 @@ namespace WpfDemo.ViewModel
                 MessageBox.Show($"删除学生失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
+        [RelayCommand]
         private async void EditStudent(Student student)
         {
             if (student == null)
@@ -159,8 +186,8 @@ namespace WpfDemo.ViewModel
             }
         }
 
-        // 修复后的方法
-        private async void AddStudent(Student student)
+        [RelayCommand]
+        private async Task AddStudent(Student student)
         {
             if (student == null || string.IsNullOrWhiteSpace(student.FirstMidName) || string.IsNullOrWhiteSpace(student.LastName))
             {

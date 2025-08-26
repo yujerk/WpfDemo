@@ -1,5 +1,4 @@
-﻿
-using System.Windows;
+﻿using System.Windows;
 using WpfDemo.Models.Entity;
 using WpfDemo.ViewModel;
 
@@ -44,7 +43,7 @@ namespace WpfDemo.View.window
         //}
         private void OnViewModelRequestClose(bool success)
         {
-            this.DialogResult = success;
+            //this.DialogResult = success;
             this.Close();
         }
     }
