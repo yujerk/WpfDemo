@@ -28,6 +28,7 @@ namespace WpfDemo.ViewModel
         public Student Student { get; set; }
 
         public int pageSize=15;
+
         private int page;
         public int Page 
         {
@@ -70,7 +71,7 @@ namespace WpfDemo.ViewModel
             Student = new Student();
 
         }
-
+        
         
         [RelayCommand]
         private void PageStudent()
@@ -227,14 +228,16 @@ namespace WpfDemo.ViewModel
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            if (value is string str && !string.IsNullOrWhiteSpace(str))
-            {
-                return new ValidationResult(true, null);
-            }
-            else
+            var str=value as string;
+            if (string.IsNullOrWhiteSpace(str))
             {
                 return new ValidationResult(false, "请填写完整");
             }
+            if(str.Length>=10)
+            {
+                return new ValidationResult(false, "字符串长度过长");
+            }
+            return new ValidationResult(true, null);
         }
 
     }

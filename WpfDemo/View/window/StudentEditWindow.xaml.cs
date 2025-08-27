@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
 using WpfDemo.Models.Entity;
 using WpfDemo.ViewModel;
 
@@ -6,7 +8,6 @@ namespace WpfDemo.View.window
 {
     public partial class StudentEditWindow : Window
     {
-       
         private bool _isEditMode;
         private StudentViewModel _studentViewModel;
         private Student? _student;
@@ -36,6 +37,10 @@ namespace WpfDemo.View.window
         }
         private void OnViewModelRequestClose(bool success)
         {
+            this.Close();
+        }
+        private void CloseButton(object sender, RoutedEventArgs e)
+        { 
             this.Close();
         }
     }
