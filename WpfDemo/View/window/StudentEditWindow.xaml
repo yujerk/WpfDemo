@@ -11,6 +11,19 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
+        <Style x:Key="ValidationButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="IsEnabled" Value="False" />
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding ElementName=FirstNameText, Path=(Validation.HasError)}" Value="false" />
+                        <Condition Binding="{Binding ElementName=LastNameText, Path=(Validation.HasError)}" Value="false" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="IsEnabled" Value="True" />
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style TargetType="TextBox">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="true">
@@ -111,22 +124,8 @@
                 Command="{Binding DataContext.AddStudentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                 CommandParameter="{Binding Student}"
                 Content="新增"
-                Visibility="Hidden">
-                <Button.Style>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="IsEnabled" Value="false" />
-                        <Style.Triggers>
-                            <MultiDataTrigger>
-                                <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding ElementName=FirstNameText, Path=(Validation.HasError)}" Value="false" />
-                                    <Condition Binding="{Binding ElementName=LastNameText, Path=(Validation.HasError)}" Value="false" />
-                                </MultiDataTrigger.Conditions>
-                                <Setter Property="IsEnabled" Value="true" />
-                            </MultiDataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+                Style="{StaticResource ValidationButtonStyle}"
+                Visibility="Hidden" />
 
             <Button
                 x:Name="EditButton"
@@ -136,23 +135,8 @@
                 Command="{Binding DataContext.EditStudentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                 CommandParameter="{Binding Student}"
                 Content="保存"
-                IsEnabled="False"
-                Visibility="Hidden">
-                <Button.Style>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="IsEnabled" Value="false" />
-                        <Style.Triggers>
-                            <MultiDataTrigger>
-                                <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding ElementName=FirstNameText, Path=(Validation.HasError)}" Value="false" />
-                                    <Condition Binding="{Binding ElementName=LastNameText, Path=(Validation.HasError)}" Value="false" />
-                                </MultiDataTrigger.Conditions>
-                                <Setter Property="IsEnabled" Value="true" />
-                            </MultiDataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+                Style="{StaticResource ValidationButtonStyle}"
+                Visibility="Hidden" />
             <Button
                 x:Name="DeleteButton"
                 Width="80"

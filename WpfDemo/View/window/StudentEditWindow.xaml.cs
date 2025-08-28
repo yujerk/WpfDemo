@@ -34,6 +34,7 @@ namespace WpfDemo.View.window
                 text.Text = "编辑学生信息";
                 
             }
+            Loaded += StudentEditWindow_Loaded;
         }
         private void OnViewModelRequestClose(bool success)
         {
@@ -42,6 +43,19 @@ namespace WpfDemo.View.window
         private void CloseButton(object sender, RoutedEventArgs e)
         { 
             this.Close();
+        }
+        private void StudentEditWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // 强制验证所有 TextBox
+            ForceValidation(FirstNameText);
+            ForceValidation(LastNameText);
+        }
+
+        private void ForceValidation(TextBox textBox)
+        {
+            // 触发验证
+            var bindingExpression = textBox.GetBindingExpression(TextBox.TextProperty);
+            bindingExpression?.UpdateSource();
         }
     }
 }
