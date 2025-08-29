@@ -59,7 +59,7 @@
             <TextBlock
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                Text="姓名:" />
+                Text="姓:" />
             <TextBox
                 x:Name="LastNameText"
                 Grid.Column="1"
@@ -83,7 +83,7 @@
             <TextBlock
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                Text="姓名:" />
+                Text="名:" />
             <TextBox
                 x:Name="FirstNameText"
                 Grid.Column="1"

@@ -151,19 +151,26 @@
                 <Button
                     Width="80"
                     Height="30"
-                    Margin="5,0"
+                    Margin="5,0,0,10"
                     Click="AddStudentButton_Click"
                     Content="添加学生" />
                 <Button
                     Width="80"
                     Height="30"
-                    Margin="5,0"
+                    Margin="5,0,0,10"
                     Click="EditStudentButton_Click"
                     Content="编辑学生" />
-                <Button Content="删除" />
                 <Button
-                    Width="60"
-                    Margin="0,0,10,0"
+                    Width="80"
+                    Height="30"
+                    Margin="5,0,0,10"
+                    Command="{Binding DeleteStudentCommand}"
+                    CommandParameter="{Binding SelectedStudent.Id}"
+                    Content="删除" />
+                <Button
+                    Width="80"
+                    Height="30"
+                    Margin="5,0,0,10"
                     Command="{Binding LoadStudentsCommand}"
                     Content="刷新" />
             </StackPanel>

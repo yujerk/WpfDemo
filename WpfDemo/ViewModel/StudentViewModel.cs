@@ -93,7 +93,6 @@ namespace WpfDemo.ViewModel
         [RelayCommand]
         private async Task LoadStudents()
         {
-            MessageBox.Show("加载学生数据");
 
             try
             {
@@ -117,7 +116,7 @@ namespace WpfDemo.ViewModel
         {
             if (string.IsNullOrWhiteSpace(id))
             {
-                MessageBox.Show("请输入有效的学生ID。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                await LoadStudents();
                 return;
             }
             if (!int.TryParse(id, out int idInt))
@@ -125,7 +124,6 @@ namespace WpfDemo.ViewModel
                 MessageBox.Show("学生ID格式不正确。", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            MessageBox.Show($"筛选学生数据: {idInt}");
             try
             {
                 var filteredStudents = await studentService.GetStudentAsync(idInt);
@@ -135,7 +133,6 @@ namespace WpfDemo.ViewModel
                 }
                 Students.Clear();
                 Students.Add(filteredStudents);
-                MessageBox.Show($"筛选学生数据: {filteredStudents.LastName}");
             }
             catch (Exception ex)
             {
