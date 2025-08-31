@@ -19,8 +19,7 @@ namespace WpfDemo.ViewModel
 {
     public partial class StudentViewModel : ObservableObject
     {
-        private readonly ILogger<StudentService> logger;
-        private readonly StudentService studentService;
+        private readonly StudentService _studentService;
 
         public ObservableCollection<Student> Students { get; }
         public List<Student> student1;
@@ -64,9 +63,9 @@ namespace WpfDemo.ViewModel
         // 添加关闭窗口的事件通知
         public Action<bool> OnRequestClose { get; set; }
 
-        public StudentViewModel()
+        public StudentViewModel(StudentService studentService)
         {
-            studentService = new StudentService(logger);
+            _studentService = studentService;
             Students = new ObservableCollection<Student>();
             Student = new Student();
 
@@ -96,7 +95,7 @@ namespace WpfDemo.ViewModel
 
             try
             {
-                var _students = await studentService.GetStudentsAsync();
+                var _students = await _studentService.GetStudentsAsync();
                 Students.Clear();
                 foreach (var student in _students)
                 {
@@ -126,7 +125,7 @@ namespace WpfDemo.ViewModel
             }
             try
             {
-                var filteredStudents = await studentService.GetStudentAsync(idInt);
+                var filteredStudents = await _studentService.GetStudentAsync(idInt);
                 if (filteredStudents == null)
                 {
                     return;
@@ -144,7 +143,7 @@ namespace WpfDemo.ViewModel
         {
             try
             {
-                var result = await studentService.DeleteStudentAsync(id);
+                var result = await _studentService.DeleteStudentAsync(id);
                 if (result)
                 {
                     Students.Clear();
@@ -173,7 +172,7 @@ namespace WpfDemo.ViewModel
             MessageBox.Show($"编辑学生信息: {student.LastName}");
             try
             {
-                var result = await studentService.UpdateStudentAsync(student);
+                var result = await _studentService.UpdateStudentAsync(student);
                 if (result)
                 {
                     MessageBox.Show("学生信息更新成功");
@@ -201,7 +200,7 @@ namespace WpfDemo.ViewModel
 
             try
             {
-                var result = await studentService.AddStudentAsync(student);
+                var result = await _studentService.AddStudentAsync(student);
                 if (result)
                 {
                     MessageBox.Show("学生添加成功");

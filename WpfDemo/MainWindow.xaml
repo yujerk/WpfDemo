@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:WpfDemo"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:WpfDemo.Models"
+    xmlns:vm="clr-namespace:WpfDemo.ViewModel"
     Title="学生信息管理"
     Width="800"
     Height="450"

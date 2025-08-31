@@ -10,29 +10,27 @@ namespace WpfDemo.View.window
     {
         private bool _isEditMode;
         private StudentViewModel _studentViewModel;
-        private Student? _student;
-        public StudentEditWindow(Student? student)
+        public StudentEditWindow(Student? student,StudentViewModel studentViewModel,bool isEditMode)
         {
             InitializeComponent();
-            _studentViewModel = new StudentViewModel();
+            _studentViewModel = studentViewModel;
             _studentViewModel.OnRequestClose += OnViewModelRequestClose;
+            _isEditMode = isEditMode;
             // 绑定数据
             this.DataContext = _studentViewModel;
-            if (student != null)
+            if (student != null && !isEditMode)
             {
                 // 编辑模式
                 _studentViewModel.Student = student;
-                _isEditMode = true;
                 EditButton.Visibility = Visibility.Visible;
-                text.Text = "添加学生信息";
+                text.Text = "编辑学生信息";
             }
             else
             {
+                _studentViewModel.Student = new Student();
                 //添加模式
-                _isEditMode = false;
                 SaveButton.Visibility = Visibility.Visible;
-                text.Text = "编辑学生信息";
-                
+                text.Text = "添加学生信息";
             }
             Loaded += StudentEditWindow_Loaded;
         }

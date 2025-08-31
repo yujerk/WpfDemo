@@ -9,6 +9,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfDemo.Models;
+using WpfDemo.View.page;
+using WpfDemo.ViewModel;
 
 namespace WpfDemo
 {
@@ -17,8 +19,12 @@ namespace WpfDemo
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private readonly StudentViewModel _studentViewModel;
+        private readonly MainWindowModel _mainWindowModel;
+        public MainWindow(StudentViewModel studentViewModel, MainWindowModel mainWindowModel)
         {
+            _studentViewModel= studentViewModel;
+            _mainWindowModel = mainWindowModel;
             InitializeComponent();
         }
 
@@ -33,17 +39,44 @@ namespace WpfDemo
         // 导航菜单项选择事件处理程序
         private void NavMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // 如果选择项不是 FrameworkElement, 则返回
+            // 如果选择项不是 NavigationItem, 则返回
             if (navMenu.SelectedItem is not NavigationItem item)
                 return;
 
-            Type type =
-                item.TargetPageType;
+            Type type = item.TargetPageType;
 
-            // 如果页面缓存中找不到页面, 则创建一个新的页面并存入
-            if (!bufferedPages.TryGetValue(type, out Page? page))
-                page = bufferedPages[type] =
-                    Activator.CreateInstance(type) as Page ?? throw new Exception("this would never happen");
+            Page page;
+
+            // 检查页面缓存
+            if (!bufferedPages.TryGetValue(type, out page))
+            {
+                // 使用反射检查构造函数
+                var constructors = type.GetConstructors();
+                var defaultConstructor = constructors.FirstOrDefault(c => c.GetParameters().Length == 0);
+
+                if (defaultConstructor != null)
+                {
+                    // 有无参数构造函数
+                    page = Activator.CreateInstance(type) as Page ??
+                           throw new Exception("无法创建页面实例");
+                }
+                else
+                {
+                    // 没有无参数构造函数，需要特殊处理
+                    if (type == typeof(StudentView))
+                    {
+                        page = Activator.CreateInstance(type, _studentViewModel) as Page ??
+                           throw new Exception("无法创建页面实例");
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"页面 {type.Name} 没有无参数构造函数且未在导航逻辑中特殊处理");
+                    }
+                }
+
+                // 缓存页面
+                bufferedPages[type] = page;
+            }
 
             appFrame.Navigate(page);
         }

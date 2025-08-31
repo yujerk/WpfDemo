@@ -1,6 +1,9 @@
-﻿using System.Windows;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System.Windows;
 using System.Windows.Controls;
 using WpfDemo.Models.Entity;
+using WpfDemo.Services;
 using WpfDemo.View.window;
 using WpfDemo.ViewModel;
 
@@ -12,10 +15,10 @@ namespace WpfDemo.View.page
     public partial class StudentView : Page
     {
         private StudentViewModel _viewModel;
-        public StudentView()
+        public StudentView(StudentViewModel? studentViewModel)
         {
             InitializeComponent();
-            _viewModel = new StudentViewModel();
+            _viewModel = studentViewModel;
             DataContext = _viewModel;
             this.Loaded += StudentView_Loaded;
         }
@@ -50,7 +53,8 @@ namespace WpfDemo.View.page
         }
         private void AddStudentButton_Click(object sender, RoutedEventArgs e)
         {
-            var editWindow = new StudentEditWindow(null);
+            var editWindow = new StudentEditWindow(null,_viewModel,true);
+            
             editWindow.Closed += (s, e) =>
             {
                 _viewModel.LoadStudentsCommand.Execute(null);
@@ -64,7 +68,7 @@ namespace WpfDemo.View.page
         {
             if (_viewModel.SelectedStudent != null)
             {
-                var editWindow = new StudentEditWindow(_viewModel.SelectedStudent);
+                var editWindow = new StudentEditWindow(_viewModel.SelectedStudent,_viewModel,false);
                 editWindow.Closed += (s, e) =>
                 {
                     _viewModel.LoadStudentsCommand.Execute(null);
